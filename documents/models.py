@@ -6,7 +6,7 @@ class Folder(models.Model):
 
     name = models.CharField(max_length=255)
     parent = models.ForeignKey(
-        "self", on_delete=models.CASCADE, related_name="children", null=True
+        "self", on_delete=models.CASCADE, related_name="children", null=True, blank=True
     )
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

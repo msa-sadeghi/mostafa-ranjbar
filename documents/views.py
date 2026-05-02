@@ -16,3 +16,7 @@ from .serializers import (
 class FolderViewSet(viewsets.ModelViewSet):
     queryset = Folder.objects.filter(parent=None)
     serializer_class = FolderSerializer
+
+
+class DocumentViewSet(viewsets.ModelViewSet):
+class FormTemplateViewSet(viewsets.ModelViewSet):

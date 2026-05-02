@@ -1,6 +1,7 @@
-
 from django.urls import path
+from .views import FolderViewSet
+
 app_name = "documents"
 urlpatterns = [
-    # path('', ),
+    path("", FolderViewSet.as_view({"get": "list"})),
 ]
