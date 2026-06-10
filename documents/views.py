@@ -19,4 +19,10 @@ class FolderViewSet(viewsets.ModelViewSet):
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
+    queryset = Document.objects.all()
+    serializer_class = DocumentSerializer
+
+
 class FormTemplateViewSet(viewsets.ModelViewSet):
+    queryset = FormTemplate.objects.filter(is_active=True)
+    serializer_class = FormTemplateSerializer

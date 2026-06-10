@@ -1,0 +1,11 @@
+form{
+    background-color: #efefef;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.container{
+    width: 100%;
+}
