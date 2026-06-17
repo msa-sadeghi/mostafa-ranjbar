@@ -17,7 +17,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.76.0",
-    "react-router-dom": "^7.15.1",
+    "react-router-dom": "^7.18.0",
     "rechart": "^0.0.1",
     "yarn": "^1.22.22"
   },
