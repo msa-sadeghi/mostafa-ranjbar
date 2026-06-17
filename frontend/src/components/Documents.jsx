@@ -1,10 +1,15 @@
 import { DataGrid } from "@mui/x-data-grid";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import api from "../api/axios";
+useEffect;
 function Documents() {
-  const [documents, setDocuments] = useEffect([]);
+  const [documents, setDocuments] = useState([]);
   useEffect(() => {
-    api.get("/documents/").then(({ data }) => setDocumnets(data));
+    api.get("/documents/").then(({ data }) => {
+      console.log(data);
+
+      setDocuments(data);
+    });
   }, []);
 
   const columns = [
