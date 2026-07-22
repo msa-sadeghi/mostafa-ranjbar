@@ -43,3 +43,5 @@ class User(AbstractUser):
         verbose_name_plural = "کاربران"
         ordering = ["-created_at"]
         db_table = "accounts_user"
+
+
