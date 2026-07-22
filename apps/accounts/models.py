@@ -36,7 +36,7 @@ class User(AbstractUser):
         return f"{self.first_name} {self.last_name}".strip() or self.username
 
     def __str__(self):
-        return f"{self.full_name}"
+        return f"{self.full_name} ({self.get_user_type_display()})"
 
     class Meta:
         verbose_name = "کاربر"
