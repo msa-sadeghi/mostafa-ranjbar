@@ -214,3 +214,61 @@ class DocumentVersion(models.Model):
         verbose_name_plural = 'نسخه‌های سند'
         unique_together = ['document', 'version_number']
         ordering = ['-version_number']
+
+
+
+
+class DocumentLog(models.Model):
+    """
+    ثبت تمام فعالیت‌ها روی اسناد.
+    گردش کار و تاریخچه هر سند.
+    """
+    
+    class ActionType(models.TextChoices):
+        CREATE   = 'CREATE',   ('ایجاد')
+        VIEW     = 'VIEW',     ('مشاهده')
+        EDIT     = 'EDIT',     ('ویرایش')
+        DELETE   = 'DELETE',   ('حذف')
+        DOWNLOAD = 'DOWNLOAD', ('دانلود')
+        CHECKOUT = 'CHECKOUT', ('خروج از قفسه')
+        CHECKIN  = 'CHECKIN',  ('ورود به قفسه')
+        SHARE    = 'SHARE',    ('اشتراک‌گذاری')
+        EXPIRE   = 'EXPIRE',   ('انقضا')
+    
+    document = models.ForeignKey(
+        Document,
+        on_delete=models.CASCADE,
+        related_name='logs',
+        verbose_name='سند',
+    )
+    
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='document_logs',
+        verbose_name='کاربر',
+    )
+    
+    action = models.CharField(
+        max_length=20,
+        choices=ActionType.choices,
+        verbose_name='عملیات',
+    )
+    
+    description = models.TextField(
+        null=True, blank=True,
+        verbose_name='توضیحات',
+    )
+    
+    ip_address = models.GenericIPAddressField(
+        null=True, blank=True,
+        verbose_name='آدرس IP',
+    )
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'لاگ سند'
+        verbose_name_plural = 'لاگ اسناد'
+        ordering = ['-created_at']
