@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 import uuid
 import os
+from django.utils import timezone
 
 
 def document_upload_path(instance, filename):
@@ -126,3 +127,36 @@ class Document(models.Model):
 
     def __str__(self):
         return f"[{self.document_number}] {self.title}"
+
+    @property
+    def is_expired(self):
+        if self.expire_date:
+            return self.expire_date < timezone.now().date()
+        return False
+
+    @property
+    def file_size_human(self):
+        if not self.file_size:
+            return " نامشخص"
+        size = self.file_size
+        for unit in ["B", "KB", "MB", "GB"]:
+            if size < 1024:
+                return f"{size:.1f}{unit}"
+            size /= 1024
+        return f"{size:.1f} TB"
+
+    def save(self):
+        if self.is_expired and self.status == self.StatusChoices.ACTIVE:
+            self.status = self.StatusChoices.EXPIRED
+        super().save()
+    class Meta:
+        verbose = 'سند'
+        verbose_name_plural = 'اسناد'
+        ordering = ['-created_at']
+
+        indexes = [
+            models.Index(fields=['title']),
+            models.Index(fields=['document_number']),
+            models.Index(fields=['status', 'created_at']),
+            models.Index(fields=['expire_date']),
+        ]
