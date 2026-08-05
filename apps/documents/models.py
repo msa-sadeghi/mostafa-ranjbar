@@ -149,14 +149,68 @@ class Document(models.Model):
         if self.is_expired and self.status == self.StatusChoices.ACTIVE:
             self.status = self.StatusChoices.EXPIRED
         super().save()
+
     class Meta:
-        verbose = 'سند'
-        verbose_name_plural = 'اسناد'
-        ordering = ['-created_at']
+        verbose = "سند"
+        verbose_name_plural = "اسناد"
+        ordering = ["-created_at"]
 
         indexes = [
-            models.Index(fields=['title']),
-            models.Index(fields=['document_number']),
-            models.Index(fields=['status', 'created_at']),
-            models.Index(fields=['expire_date']),
+            models.Index(fields=["title"]),
+            models.Index(fields=["document_number"]),
+            models.Index(fields=["status", "created_at"]),
+            models.Index(fields=["expire_date"]),
         ]
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=100, unique=True, verbose_name="نام")
+    color = models.CharField(max_length=7, default="#3498DB", verbose_name="رنگ")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "برچسب"
+        verbose_name_plural = "برچسب ها"
+
+
+class DocumentVersion(models.Model):
+    """
+    نسخه‌بندی اسناد.
+    هر سند می‌تواند چندین نسخه داشته باشد.
+    """
+    
+    document = models.ForeignKey(
+        Document,
+        on_delete=models.CASCADE,
+        related_name='versions',
+        verbose_name='سند',
+    )
+    
+    version_number = models.PositiveIntegerField(verbose_name='شماره نسخه')
+    
+    file = models.FileField(
+        upload_to='document_versions/',
+        verbose_name='فایل نسخه',
+    )
+    
+    change_note = models.TextField(
+        null=True, blank=True,
+        verbose_name='یادداشت تغییر',
+    )
+    
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name='ایجادشده توسط',
+    )
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'نسخه سند'
+        verbose_name_plural = 'نسخه‌های سند'
+        unique_together = ['document', 'version_number']
+        ordering = ['-version_number']
