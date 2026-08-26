@@ -151,7 +151,7 @@ class Document(models.Model):
         super().save()
 
     class Meta:
-        verbose = "سند"
+        verbose_name = "سند"
         verbose_name_plural = "اسناد"
         ordering = ["-created_at"]
 
